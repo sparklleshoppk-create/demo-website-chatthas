@@ -1,0 +1,44 @@
+{
+  "name": "chatthas-website",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "node server/index.js",
+    "dev:all": "concurrently \"vite --host --port 5173\" \"node server/index.js\""
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "concurrently": "^9.1.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "express-validator": "^7.2.1",
+    "framer-motion": "^11.18.2",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "lowdb": "^7.0.1",
+    "lucide-react": "^1.14.0",
+    "multer": "^1.4.5-lts.2",
+    "react": "^18.3.1",
+    "react-countup": "^6.5.3",
+    "react-dom": "^18.3.1",
+    "react-helmet-async": "^2.0.5",
+    "react-hot-toast": "^2.5.2",
+    "react-icons": "^5.5.0",
+    "react-intersection-observer": "^9.16.0",
+    "react-router-dom": "^6.30.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.5.2",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "vite": "^6.3.5"
+  }
+}

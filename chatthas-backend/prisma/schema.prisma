@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("ADMIN") // ADMIN, EDITOR
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id          String     @id @default(uuid())
+  name        String
+  label       String
+  icon        String?
+  order       Int        @default(0)
+  items       MenuItem[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model MenuItem {
+  id          String   @id @default(uuid())
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  name        String
+  nameUrdu    String?
+  description String
+  price       String
+  tags        String[] // ["bestseller", "signature", "popular", "new"]
+  spice       Int      @default(0) // 0-3
+  image       String?
+  isAvailable Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Branch {
+  id          String   @id @default(uuid())
+  name        String
+  badge       String?
+  badgeColor  String?
+  address     String
+  phone       String
+  phone2      String?
+  whatsapp    String?
+  hours       String
+  hoursNote   String?
+  foodpanda   String?
+  mapUrl      String?
+  mapEmbed    String?
+  highlight   String?
+  description String
+  rating      Float    @default(0)
+  reviews     String?
+  platform    String?
+  isNew       Boolean  @default(false)
+  isFeatured  Boolean  @default(false)
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  name      String
+  platform  String   @default("Website")
+  rating    Int
+  text      String
+  isApproved Boolean @default(false)
+  isFeatured Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GalleryItem {
+  id        String   @id @default(uuid())
+  type      String   // "image" or "video"
+  category  String   // "food", "interior", "experience", "video"
+  src       String
+  title     String
+  span      String   @default("col-span-1 row-span-1")
+  videoId   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Inquiry {
+  id          String   @id @default(uuid())
+  type        String   // "contact", "franchise", "reservation"
+  name        String
+  email       String
+  phone       String
+  message     String
+  status      String   @default("UNREAD") // UNREAD, READ, RESPONDED
+  metadata    Json?    // Store dynamic fields (location, investment, etc)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Setting {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String   // JSON stringified value
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
