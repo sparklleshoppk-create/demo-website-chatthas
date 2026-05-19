@@ -190,12 +190,7 @@ function HeroSection() {
         </div>
       )}
 
-      {/* Cinematic Scroll Indicator */}
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.5, duration: 1 }}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-20">
-        <div className="w-[1px] h-16 bg-gradient-to-b from-gold-500/0 via-gold-500 to-gold-500/0 animate-pulse" />
-        <span className="text-gold-500 text-[9px] tracking-[0.4em] uppercase font-body font-semibold">Scroll to Discover</span>
-      </motion.div>
+
     </section>
   );
 }
