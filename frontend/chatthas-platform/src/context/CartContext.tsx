@@ -42,6 +42,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const addToCart = (dish: any, selectedVariant?: any, selectedAddons?: any[]) => {
     setItems(prev => {
       let finalPrice = parseFloat(dish.price);
+      
+      const hasActiveDiscount = dish.discount_price && dish.discount_end_date && new Date(dish.discount_end_date) > new Date();
+      if (hasActiveDiscount) {
+        finalPrice = parseFloat(dish.discount_price);
+      }
+
       let variantLabel = null;
       let addonList: any[] = [];
 

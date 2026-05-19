@@ -70,7 +70,21 @@ export default async function MenuItemPage({ params }: { params: { slug: string 
 
               <div className="space-y-4">
                 <h1 className="text-5xl md:text-6xl font-display font-bold text-cream tracking-tight leading-tight">{item.name}</h1>
-                <p className="text-3xl font-display font-bold text-gold-500 italic">Rs. {item.price}</p>
+                {(() => {
+                  const hasActiveDiscount = item.discount_price && item.discount_end_date && new Date(item.discount_end_date) > new Date();
+                  return (
+                    <div className="flex items-baseline gap-4">
+                      {hasActiveDiscount ? (
+                        <>
+                          <p className="text-3xl font-display font-bold text-gold-500 italic">Rs. {item.discount_price}</p>
+                          <p className="text-xl font-display font-bold text-cream/40 line-through italic">Rs. {item.price}</p>
+                        </>
+                      ) : (
+                        <p className="text-3xl font-display font-bold text-gold-500 italic">Rs. {item.price}</p>
+                      )}
+                    </div>
+                  );
+                })()}
               </div>
               
               <div className="gold-divider ml-0 w-20 h-[1px]" />

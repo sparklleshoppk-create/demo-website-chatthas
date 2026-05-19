@@ -2,7 +2,50 @@
 
 import { useCart } from '@/context/CartContext';
 import { FaUtensils } from 'react-icons/fa';
-import { useState } from 'react';
+import React, { useState } from 'react';
+
+const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
+  const [timeLeft, setTimeLeft] = useState('');
+
+  React.useEffect(() => {
+    const target = new Date(targetDate).getTime();
+    
+    const updateTimer = () => {
+      const now = new Date().getTime();
+      const distance = target - now;
+
+      if (distance < 0) {
+        setTimeLeft('');
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      const parts = [];
+      if (days > 0) parts.push(`${days}d`);
+      if (hours > 0 || days > 0) parts.push(`${hours}h`);
+      if (minutes > 0 || hours > 0 || days > 0) parts.push(`${minutes}m`);
+      parts.push(`${seconds}s`);
+      
+      setTimeLeft(parts.join(' '));
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [targetDate]);
+
+  if (!timeLeft) return null;
+
+  return (
+    <div className="flex items-center gap-1 text-xs text-ember-400 font-bold bg-ember-500/10 px-2 py-1 rounded-sm w-fit mt-1">
+      <span>⏳ Ends in {timeLeft}</span>
+    </div>
+  );
+};
 
 export default function AddToCartButton({ item }: { item: any }) {
   const { addToCart } = useCart();
@@ -30,7 +73,17 @@ export default function AddToCartButton({ item }: { item: any }) {
     });
   };
 
-  let displayPrice = Number(item.price);
+  let basePrice = Number(item.price);
+  let hasActiveDiscount = false;
+  
+  if (typeof window !== 'undefined') {
+    hasActiveDiscount = !!(item.discount_price && item.discount_end_date && new Date(item.discount_end_date) > new Date());
+    if (hasActiveDiscount) {
+      basePrice = Number(item.discount_price);
+    }
+  }
+
+  let displayPrice = basePrice;
   if (selectedVariant) displayPrice += Number(selectedVariant.price_adjustment || 0);
   selectedAddons.forEach(a => displayPrice += Number(a.price || 0));
 
@@ -75,8 +128,11 @@ export default function AddToCartButton({ item }: { item: any }) {
       )}
 
       <div className="pt-4 flex items-center justify-between">
-        <div className="text-xl font-display font-bold text-gold-500">
-          Rs. {displayPrice}
+        <div>
+          <div className="text-xl font-display font-bold text-gold-500">
+            Rs. {displayPrice}
+          </div>
+          {hasActiveDiscount && <CountdownTimer targetDate={item.discount_end_date} />}
         </div>
         <button 
           onClick={handleAdd}

@@ -50,17 +50,25 @@ function HeroSection() {
 
   const activeBanners = banners.length > 0 ? banners : defaultBanners;
 
-  // Auto-slide transition timing — uses admin-configured duration from settings
+  // Auto-slide transition timing — uses per-banner duration from config, falls back to global setting
   useEffect(() => {
     if (activeBanners.length <= 1) return;
-    const timer = setInterval(() => {
+    const currentBanner = activeBanners[currentSlide < activeBanners.length ? currentSlide : 0];
+    const bannerDuration = currentBanner?.config?.display_duration_s
+      ? currentBanner.config.display_duration_s * 1000
+      : swapDuration;
+    const timer = setTimeout(() => {
       setCurrentSlide((prev) => (prev + 1) % activeBanners.length);
-    }, swapDuration);
-    return () => clearInterval(timer);
-  }, [activeBanners, swapDuration]);
+    }, bannerDuration);
+    return () => clearTimeout(timer);
+  }, [activeBanners, swapDuration, currentSlide]);
 
   const safeSlide = currentSlide < activeBanners.length ? currentSlide : 0;
   const activeBanner = activeBanners[safeSlide] || defaultBanners[0];
+  const animType = activeBanner.animation_type || 'zoom';
+  const zoomInitial = animType === 'zoom' ? { scale: 1.15 } : animType === 'slide_up' ? { scale: 1.02, y: 10 } : { scale: 1 };
+  const zoomAnimate = animType === 'zoom' ? { scale: 1 } : animType === 'slide_up' ? { scale: 1, y: 0 } : { scale: 1 };
+  const zoomTransition = animType === 'zoom' ? { duration: 8, ease: 'easeOut' } : { duration: 1.5, ease: 'easeOut' };
 
   return (
     <section className="relative h-screen min-h-[800px] flex items-center justify-center overflow-hidden bg-primary-black">
@@ -79,18 +87,18 @@ function HeroSection() {
           
           {/* Responsive Desktop Asset */}
           <motion.div 
-            initial={{ scale: 1.15 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 8, ease: 'easeOut' }}
+            initial={zoomInitial}
+            animate={zoomAnimate}
+            transition={zoomTransition}
             className="absolute inset-0 bg-cover bg-center hidden md:block"
             style={{ backgroundImage: `url(${activeBanner.media_url})` }}
           />
 
           {/* Responsive Mobile Asset */}
           <motion.div 
-            initial={{ scale: 1.15 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 8, ease: 'easeOut' }}
+            initial={zoomInitial}
+            animate={zoomAnimate}
+            transition={zoomTransition}
             className="absolute inset-0 bg-cover bg-center md:hidden"
             style={{ backgroundImage: `url(${activeBanner.media_url_mobile || activeBanner.media_url})` }}
           />

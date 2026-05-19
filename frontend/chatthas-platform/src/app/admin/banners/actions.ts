@@ -40,6 +40,11 @@ export async function createBanner(formData: FormData) {
   const endDate = formData.get('end_date') as string;
   if (endDate) data.end_date = new Date(endDate).toISOString();
 
+  const configStr = formData.get('config') as string;
+  if (configStr) {
+    try { data.config = JSON.parse(configStr); } catch (_) {}
+  }
+
   const { error } = await supabase.from('homepage_sections').insert(data);
   
   if (error) {

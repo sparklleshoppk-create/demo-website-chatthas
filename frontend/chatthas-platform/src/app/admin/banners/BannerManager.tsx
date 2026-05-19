@@ -143,6 +143,11 @@ export default function BannerManager({ banners }: { banners: any[] }) {
       return;
     }
 
+    // Store display duration in config jsonb
+    const displayDuration = parseFloat(fd.get('display_duration_s') as string) || 7;
+    fd.set('config', JSON.stringify({ display_duration_s: displayDuration }));
+    fd.delete('display_duration_s');
+
     const res = await createBanner(fd);
     
     if (res?.error) {
@@ -161,6 +166,8 @@ export default function BannerManager({ banners }: { banners: any[] }) {
   const handleUpdateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
+
+    const displayDuration = parseFloat(fd.get('display_duration_s') as string) || 7;
     
     const data = {
       title: fd.get('title') as string,
@@ -175,6 +182,7 @@ export default function BannerManager({ banners }: { banners: any[] }) {
       start_date: fd.get('start_date') ? new Date(fd.get('start_date') as string).toISOString() : null,
       end_date: fd.get('end_date') ? new Date(fd.get('end_date') as string).toISOString() : null,
       sort_order: parseInt(fd.get('sort_order') as string) || 0,
+      config: { display_duration_s: displayDuration },
     };
 
     const res = await updateBanner(editingBanner.id, data);
@@ -284,10 +292,10 @@ export default function BannerManager({ banners }: { banners: any[] }) {
                   </div>
                   <div className="space-y-1">
                     <label className="text-sm font-bold text-cream/40 uppercase tracking-widest">Animation</label>
-                    <select name="animation_type" className="admin-input bg-primary-black text-base uppercase" defaultValue="fade">
+                    <select name="animation_type" className="admin-input bg-primary-black text-base uppercase" defaultValue="zoom">
+                      <option value="zoom">Cinematic Zoom (Ken Burns)</option>
                       <option value="fade">Fade In</option>
                       <option value="slide_up">Slide Up</option>
-                      <option value="zoom">Zoom Pan</option>
                     </select>
                   </div>
                 </div>
@@ -331,9 +339,18 @@ export default function BannerManager({ banners }: { banners: any[] }) {
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-sm font-bold text-cream/40 uppercase tracking-widest">Sort Order</label>
-                  <input type="number" name="sort_order" defaultValue="0" className="admin-input bg-primary-black" />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-sm font-bold text-cream/40 uppercase tracking-widest">Display Duration</label>
+                    <div className="flex items-center gap-2">
+                      <input type="number" step="0.5" min="3" max="30" name="display_duration_s" defaultValue="7" className="admin-input bg-primary-black" />
+                      <span className="text-xs text-cream/30 uppercase tracking-widest whitespace-nowrap">seconds</span>
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-bold text-cream/40 uppercase tracking-widest">Sort Order</label>
+                    <input type="number" name="sort_order" defaultValue="0" className="admin-input bg-primary-black" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -425,10 +442,10 @@ export default function BannerManager({ banners }: { banners: any[] }) {
                   </div>
                   <div className="space-y-1">
                     <label className="text-sm font-bold text-cream/40 uppercase tracking-widest">Animation</label>
-                    <select name="animation_type" className="admin-input bg-primary-black text-base uppercase" defaultValue={editingBanner.animation_type}>
+                    <select name="animation_type" className="admin-input bg-primary-black text-base uppercase" defaultValue={editingBanner.animation_type || 'zoom'}>
+                      <option value="zoom">Cinematic Zoom (Ken Burns)</option>
                       <option value="fade">Fade In</option>
                       <option value="slide_up">Slide Up</option>
-                      <option value="zoom">Zoom Pan</option>
                     </select>
                   </div>
                 </div>
@@ -472,9 +489,18 @@ export default function BannerManager({ banners }: { banners: any[] }) {
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-sm font-bold text-cream/40 uppercase tracking-widest">Sort Order</label>
-                  <input type="number" name="sort_order" defaultValue={editingBanner.sort_order || 0} className="admin-input bg-primary-black" />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-sm font-bold text-cream/40 uppercase tracking-widest">Display Duration</label>
+                    <div className="flex items-center gap-2">
+                      <input type="number" step="0.5" min="3" max="30" name="display_duration_s" defaultValue={editingBanner.config?.display_duration_s || 7} className="admin-input bg-primary-black" />
+                      <span className="text-xs text-cream/30 uppercase tracking-widest whitespace-nowrap">seconds</span>
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-bold text-cream/40 uppercase tracking-widest">Sort Order</label>
+                    <input type="number" name="sort_order" defaultValue={editingBanner.sort_order || 0} className="admin-input bg-primary-black" />
+                  </div>
                 </div>
               </form>
             </div>
@@ -541,6 +567,8 @@ export default function BannerManager({ banners }: { banners: any[] }) {
               <span className="text-cream/40 flex items-center gap-3">
                 <span className="flex items-center gap-1"><FaDesktop className={banner.media_url ? 'text-gold-500' : 'text-cream/20'} /> Desk</span>
                 <span className="flex items-center gap-1"><FaMobileAlt className={banner.media_url_mobile ? 'text-gold-500' : 'text-cream/20'} /> Mob</span>
+                <span className="text-cream/30 border border-dark-border px-2 py-0.5 rounded-sm">{banner.animation_type || 'zoom'}</span>
+                <span className="text-cream/30 border border-dark-border px-2 py-0.5 rounded-sm">{banner.config?.display_duration_s || 7}s</span>
               </span>
               <span className={banner.is_active ? 'text-green-500' : 'text-ember-500'}>
                 {banner.is_active ? '• Active' : '• Paused'}

@@ -8,6 +8,49 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getDisplayPrice } from '@/lib/utils';
 
+const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
+  const [timeLeft, setTimeLeft] = useState('');
+
+  React.useEffect(() => {
+    const target = new Date(targetDate).getTime();
+    
+    const updateTimer = () => {
+      const now = new Date().getTime();
+      const distance = target - now;
+
+      if (distance < 0) {
+        setTimeLeft('');
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      const parts = [];
+      if (days > 0) parts.push(`${days}d`);
+      if (hours > 0 || days > 0) parts.push(`${hours}h`);
+      if (minutes > 0 || hours > 0 || days > 0) parts.push(`${minutes}m`);
+      parts.push(`${seconds}s`);
+      
+      setTimeLeft(parts.join(' '));
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [targetDate]);
+
+  if (!timeLeft) return null;
+
+  return (
+    <div className="flex items-center gap-1 text-xs text-ember-400 font-bold bg-ember-500/10 px-2 py-1 rounded-sm mt-2 w-fit">
+      <span>⏳ Ends in {timeLeft}</span>
+    </div>
+  );
+};
+
 export default function MenuClient({ items, categories }: { items: any[], categories: any[] }) {
   const [activeCategory, setActiveCategory] = useState(categories[0]?.id || 'nashta');
   const [searchQuery, setSearchQuery] = useState('');
@@ -99,9 +142,26 @@ export default function MenuClient({ items, categories }: { items: any[], catego
                   </div>
                   <div className="p-5 flex-grow pointer-events-none">
                     <h3 className="font-display text-lg font-bold text-cream group-hover:text-gold-400 transition-colors">{dish.name}</h3>
-                    <p className="text-gold-500 font-bold mt-1">
-                      {getDisplayPrice(dish)}
-                    </p>
+                    {(() => {
+                      const isClient = typeof window !== 'undefined';
+                      const hasActiveDiscount = isClient && dish.discount_price && dish.discount_end_date && new Date(dish.discount_end_date) > new Date();
+                      
+                      return (
+                        <div className="mt-1">
+                          {hasActiveDiscount ? (
+                            <div className="flex items-baseline gap-2">
+                              <span className="text-gold-500 font-bold text-lg">Rs. {dish.discount_price}</span>
+                              <span className="text-cream/40 line-through text-sm">{getDisplayPrice(dish)}</span>
+                            </div>
+                          ) : (
+                            <p className="text-gold-500 font-bold text-lg">
+                              {getDisplayPrice(dish)}
+                            </p>
+                          )}
+                          {hasActiveDiscount && <CountdownTimer targetDate={dish.discount_end_date} />}
+                        </div>
+                      );
+                    })()}
                   </div>
                 </Link>
               </motion.div>

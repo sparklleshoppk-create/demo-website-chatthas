@@ -24,6 +24,7 @@
     "framer-motion": "^11.18.2",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
+    "leaflet": "^1.9.4",
     "lowdb": "^7.0.1",
     "lucide-react": "^1.14.0",
     "multer": "^1.4.5-lts.2",

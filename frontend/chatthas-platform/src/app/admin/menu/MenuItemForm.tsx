@@ -16,6 +16,8 @@ interface MenuItem {
   name: string;
   description: string;
   price: number;
+  discount_price?: number | null;
+  discount_end_date?: string | null;
   category_id: string;
   badge: string | null;
   is_available: boolean;
@@ -263,6 +265,31 @@ export default function MenuItemForm({
             required
             className="w-full px-3 py-2.5 border border-dark-border bg-charcoal text-cream rounded-sm focus:outline-none focus:ring-1 focus:ring-gold-500 focus:border-gold-500 sm:text-sm"
             placeholder="450.00"
+          />
+        </div>
+
+        {/* Discount Price */}
+        <div>
+          <label className="block text-sm font-medium text-cream/80 mb-1">Discount Price (Rs.)</label>
+          <input
+            type="number"
+            name="discount_price"
+            step="0.01"
+            min="0"
+            defaultValue={item?.discount_price || ''}
+            className="w-full px-3 py-2.5 border border-dark-border bg-charcoal text-cream rounded-sm focus:outline-none focus:ring-1 focus:ring-gold-500 focus:border-gold-500 sm:text-sm"
+            placeholder="e.g. 399.00"
+          />
+        </div>
+
+        {/* Discount End Date */}
+        <div>
+          <label className="block text-sm font-medium text-cream/80 mb-1">Discount Valid Until</label>
+          <input
+            type="datetime-local"
+            name="discount_end_date"
+            defaultValue={item?.discount_end_date ? new Date(item.discount_end_date).toISOString().slice(0, 16) : ''}
+            className="w-full px-3 py-2.5 border border-dark-border bg-charcoal text-cream rounded-sm focus:outline-none focus:ring-1 focus:ring-gold-500 focus:border-gold-500 sm:text-sm"
           />
         </div>
 
