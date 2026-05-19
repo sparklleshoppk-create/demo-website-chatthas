@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    { "source": "/admin", "destination": "https://chatthas-platform.vercel.app/admin", "permanent": false },
+    { "source": "/admin/(.*)", "destination": "https://chatthas-platform.vercel.app/admin/$1", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "https://chatthas-platform.vercel.app/api/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

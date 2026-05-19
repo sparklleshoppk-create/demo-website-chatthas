@@ -20,6 +20,7 @@ out/
 .env.*
 !.env.example
 !.env.local.example
+VERCEL_SECRETS.txt
 
 # IDEs and editors
 .vscode/

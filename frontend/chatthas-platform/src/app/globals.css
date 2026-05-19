@@ -1,0 +1,190 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,300;1,400&family=Lato:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS Custom Properties ─── */
+:root {
+  --gold: #C9A84C;
+  --gold-light: #efdba3;
+  --ember: #C0392B;
+  --charcoal: #1C1C1C;
+  --primary-black: #0A0A0A;
+  --dark-card: #1C1C1C;
+  --cream: #FAF7F0;
+}
+
+/* ─── Base Reset & Body ─── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  @apply bg-primary-black text-cream font-body antialiased;
+  overflow-x: hidden;
+}
+
+/* ─── Selection ─── */
+::selection {
+  background: rgba(201, 168, 76, 0.3);
+  color: #FAF7F0;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0A0A0A; }
+::-webkit-scrollbar-thumb { background: #C9A84C; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #B8860B; }
+
+/* ─── Typography ─── */
+.font-display { font-family: 'Cormorant Garamond', Georgia, serif; }
+
+h1 { font-family: 'Cormorant Garamond', Georgia, serif; }
+h2, h3 { font-family: 'Playfair Display', Georgia, serif; }
+
+/* ─── Gold Gradient Text ─── */
+.gold-text {
+  background: linear-gradient(135deg, #C9A84C, #efdba3, #C9A84C);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Glassmorphism ─── */
+.glass {
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+}
+
+/* ─── Gold Divider ─── */
+.gold-divider {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #C9A84C, transparent);
+  margin: 0 auto;
+}
+
+/* ─── Button Base ─── */
+.btn-gold {
+  @apply inline-flex items-center gap-2 px-8 py-4 font-body font-semibold text-sm tracking-widest uppercase transition-all duration-300 rounded-none;
+  background: linear-gradient(135deg, #C9A84C, #efdba3);
+  color: #0A0A0A;
+  box-shadow: 0 0 0 0 rgba(201, 168, 76, 0);
+}
+.btn-gold:hover {
+  box-shadow: 0 0 30px rgba(201, 168, 76, 0.5), 0 8px 24px rgba(0,0,0,0.3);
+  transform: translateY(-2px);
+}
+
+.btn-outline-gold {
+  @apply inline-flex items-center gap-2 px-8 py-4 font-body font-semibold text-sm tracking-widest uppercase transition-all duration-300 rounded-none;
+  border: 1px solid #C9A84C;
+  color: #C9A84C;
+  background: transparent;
+}
+.btn-outline-gold:hover {
+  background: rgba(201,168,76,0.1);
+  color: #FAF7F0;
+  box-shadow: 0 0 30px rgba(201, 168, 76, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-ember {
+  @apply inline-flex items-center gap-2 px-8 py-4 font-body font-semibold text-sm tracking-widest uppercase transition-all duration-300 rounded-none;
+  background: #C0392B;
+  color: #fff;
+}
+
+/* ─── Card Hover Lift ─── */
+.card-lift {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+/* ─── Forms & Inputs ─── */
+.admin-input {
+  width: 100%;
+  background-color: var(--charcoal);
+  border: 1px solid #333333;
+  border-radius: 2px;
+  padding: 0.75rem 1rem;
+  color: #FAF7F0 !important;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+select.admin-input,
+select.admin-input option,
+.admin-input select,
+.admin-input option,
+select option {
+  background-color: #1C1C1C !important;
+  color: #FAF7F0 !important;
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 15px rgba(201, 168, 76, 0.1);
+  background: rgba(201, 168, 76, 0.05);
+}
+
+.admin-input::placeholder {
+  color: rgba(250, 247, 240, 0.2);
+}
+
+/* ─── Utilities ─── */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ─── Redesign UI Classes ─── */
+.gold-text {
+  background: linear-gradient(135deg, #C9A84C, #efdba3, #C9A84C);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.btn-gold {
+  @apply inline-flex items-center gap-2 px-6 py-2 font-body font-semibold text-xs tracking-[0.1em] uppercase transition-all duration-300 rounded-sm;
+  background: linear-gradient(135deg, #C9A84C, #efdba3);
+  color: #0A0A0A;
+  box-shadow: 0 0 0 0 rgba(201, 168, 76, 0);
+}
+.btn-gold:hover {
+  box-shadow: 0 0 20px rgba(201, 168, 76, 0.3), 0 4px 12px rgba(0,0,0,0.3);
+  transform: translateY(-2px);
+}
+
+.btn-outline-gold {
+  @apply inline-flex items-center gap-2 px-6 py-2 font-body font-semibold text-xs tracking-[0.1em] uppercase transition-all duration-300 rounded-sm;
+  border: 1px solid #C9A84C;
+  color: #FAF7F0;
+  background: transparent;
+}
+.btn-outline-gold:hover {
+  background: rgba(201, 168, 76, 0.1);
+  color: #FAF7F0;
+  box-shadow: 0 0 20px rgba(201, 168, 76, 0.2);
+  transform: translateY(-2px);
+}
+
+.card-lift {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border-color: rgba(201, 168, 76, 0.3);
+}

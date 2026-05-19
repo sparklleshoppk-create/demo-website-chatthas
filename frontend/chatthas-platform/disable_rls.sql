@@ -1,0 +1,1 @@
+ALTER TABLE contact_messages DISABLE ROW LEVEL SECURITY;  
