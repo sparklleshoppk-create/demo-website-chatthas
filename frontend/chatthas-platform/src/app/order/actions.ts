@@ -87,7 +87,7 @@ export async function createOrder(customerData: any, cartItems: any[]) {
 
     revalidatePath('/admin', 'layout');
     revalidatePath('/admin/orders');
-    return { success: true, orderId: order.id };
+    return { success: true, orderId: order.id, orderNumber: order.order_number };
   } catch (error: any) {
     console.error('Order Error:', error);
     return { error: error.message || 'Something went wrong while placing your order.' };

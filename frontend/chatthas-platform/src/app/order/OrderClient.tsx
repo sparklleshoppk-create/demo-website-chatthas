@@ -21,6 +21,8 @@ export default function OrderClient() {
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'stripe' | 'payfast'>('cod');
 
   const [orderData, setOrderData] = useState<any>(null);
+  const [successOrderNumber, setSuccessOrderNumber] = useState<string | null>(null);
+  const [successTotal, setSuccessTotal] = useState<number | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [stripePromise, setStripePromise] = useState<any>(null);
   const router = useRouter();
@@ -253,6 +255,9 @@ export default function OrderClient() {
             setStatus('idle');
           }
         } else {
+          setSuccessOrderNumber(res.orderNumber);
+          setSuccessTotal(finalTotal);
+          setOrderData({ orderId: res.orderId, ...customerData });
           clearCart();
           setStatus('success');
         }
@@ -271,9 +276,20 @@ export default function OrderClient() {
     return (
       <div className="py-32 container-custom text-center">
         <FaCheckCircle className="text-gold-500 mx-auto mb-6" size={64} />
-        <h2 className="text-4xl font-display font-bold text-cream mb-4">Order Received!</h2>
+        <h2 className="text-4xl font-display font-bold text-cream mb-4">Order Confirmed!</h2>
+        {successOrderNumber && (
+          <p className="text-2xl font-display font-bold text-cream mb-2">Order <span className="gold-text italic">#{successOrderNumber}</span></p>
+        )}
+        {successTotal && (
+          <p className="text-lg text-cream/70 mb-6">Total Paid: <span className="text-gold-500 font-bold">Rs. {successTotal}</span></p>
+        )}
         <p className="text-cream/50 mb-8 max-w-md mx-auto">Thank you for choosing Chattha's. We have received your order and are preparing it with love. Our rider will contact you shortly.</p>
-        <button onClick={() => router.push('/menu')} className="btn-gold px-8">Order More Food</button>
+        <div className="flex gap-4 justify-center">
+          {orderData?.orderId && (
+            <button onClick={() => router.push(`/order/track/${orderData.orderId}`)} className="btn-gold px-8">Track My Order</button>
+          )}
+          <button onClick={() => router.push('/menu')} className="btn-outline-gold px-8">Order More Food</button>
+        </div>
       </div>
     );
   }

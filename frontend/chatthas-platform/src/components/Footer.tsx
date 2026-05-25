@@ -134,8 +134,18 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-dark-border">
         <div className="container-custom py-5 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p className="text-cream/30 text-xs font-body">
+          <p className="text-cream/30 text-xs font-body flex items-center gap-1 flex-wrap">
             &copy; {year} Chattha's Restaurant. All rights reserved.
+            <span className="text-cream/20">|</span>
+            <span>Powered by</span>
+            <a
+              href="https://api.whatsapp.com/send?phone=923365803451"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold-400 hover:text-gold-300 underline transition-colors duration-200"
+            >
+              Musa Ikram
+            </a>
           </p>
           <p className="text-cream/20 text-xs font-body">
             Making Desi Food Great Again — Since 2016

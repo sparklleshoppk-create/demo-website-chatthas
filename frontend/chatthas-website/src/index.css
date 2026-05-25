@@ -66,6 +66,47 @@ html, body {
 h1 { font-family: 'Cormorant Garamond', Georgia, serif; }
 h2, h3 { font-family: 'Playfair Display', Georgia, serif; }
 
+/* ─── Distinct Number Font ─── 
+   Uses Outfit for digits (0-9), currency symbols, math operators 
+   via @font-face unicode-range override. This makes all numbers
+   render in Outfit while body text stays in Lato and headings 
+   stay in their display fonts. */
+@font-face {
+  font-family: 'Lato';
+  src: local('Outfit'), url('https://fonts.gstatic.com/s/outfit/v11/QGYsz_ueZaUx989Bjw.woff2') format('woff2');
+  unicode-range: U+0030-0039, U+002E, U+002C, U+0025, U+002B, U+002D, U+20A8, U+20B9;
+}
+@font-face {
+  font-family: 'Playfair Display';
+  src: local('Outfit'), url('https://fonts.gstatic.com/s/outfit/v11/QGYsz_ueZaUx989Bjw.woff2') format('woff2');
+  unicode-range: U+0030-0039, U+002E, U+002C, U+0025, U+002B, U+002D, U+20A8, U+20B9;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: local('Outfit'), url('https://fonts.gstatic.com/s/outfit/v11/QGYsz_ueZaUx989Bjw.woff2') format('woff2');
+  unicode-range: U+0030-0039, U+002E, U+002C, U+0025, U+002B, U+002D, U+20A8, U+20B9;
+}
+@font-face {
+  font-family: 'system-ui';
+  src: local('Outfit'), url('https://fonts.gstatic.com/s/outfit/v11/QGYsz_ueZaUx989Bjw.woff2') format('woff2');
+  unicode-range: U+0030-0039, U+002E, U+002C, U+0025, U+002B, U+002D, U+20A8, U+20B9;
+}
+@font-face {
+  font-family: 'sans-serif';
+  src: local('Outfit'), url('https://fonts.gstatic.com/s/outfit/v11/QGYsz_ueZaUx989Bjw.woff2') format('woff2');
+  unicode-range: U+0030-0039, U+002E, U+002C, U+0025, U+002B, U+002D, U+20A8, U+20B9;
+}
+@font-face {
+  font-family: 'serif';
+  src: local('Outfit'), url('https://fonts.gstatic.com/s/outfit/v11/QGYsz_ueZaUx989Bjw.woff2') format('woff2');
+  unicode-range: U+0030-0039, U+002E, U+002C, U+0025, U+002B, U+002D, U+20A8, U+20B9;
+}
+@font-face {
+  font-family: 'Georgia';
+  src: local('Outfit'), url('https://fonts.gstatic.com/s/outfit/v11/QGYsz_ueZaUx989Bjw.woff2') format('woff2');
+  unicode-range: U+0030-0039, U+002E, U+002C, U+0025, U+002B, U+002D, U+20A8, U+20B9;
+}
+
 /* ─── Gold Gradient Text ─── */
 .gold-text {
   color: #C9A84C;
@@ -188,7 +229,6 @@ h2, h3 { font-family: 'Playfair Display', Georgia, serif; }
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 24px;
 }
 
 /* ─── Page Transition ─── */

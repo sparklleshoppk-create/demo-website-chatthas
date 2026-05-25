@@ -94,8 +94,14 @@ export default function MenuPage() {
             <div className="flex overflow-x-auto gap-4 pb-2 hide-scrollbar">
               {isLoading ? (
                 <div className="flex gap-4">
-                  {[1,2,3,4,5].map(i => (
-                    <div key={i} className="w-32 h-10 bg-white/5 animate-pulse rounded-sm" />
+                  {[1, 2, 3, 4, 5].map(i => (
+                    <div 
+                      key={i} 
+                      className="w-32 h-10 bg-charcoal border border-dark-border/40 relative overflow-hidden flex-shrink-0 flex items-center justify-center"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gold-500/5 to-transparent bg-[length:200%_100%] animate-shimmer" />
+                      <div className="w-16 h-3 bg-white/5 rounded-sm" />
+                    </div>
                   ))}
                 </div>
               ) : (
@@ -119,8 +125,12 @@ export default function MenuPage() {
 
         <div className="container-custom">
           <FadeUp>
-             <h2 className="font-display text-4xl text-cream italic font-light mb-10 border-b border-dark-border/50 pb-4">
-                {menuData.categories.find(c => c.id === activeCategory)?.label || 'Loading...'}
+             <h2 className="font-display text-4xl text-cream italic font-light mb-10 border-b border-dark-border/50 pb-4 min-h-[57px] flex items-center">
+                {isLoading ? (
+                  <div className="h-10 w-60 bg-gradient-to-r from-white/5 via-gold-500/10 to-white/5 bg-[length:200%_100%] animate-shimmer rounded-sm" />
+                ) : (
+                  menuData.categories.find(c => c.id === activeCategory)?.label
+                )}
              </h2>
           </FadeUp>
 
@@ -135,9 +145,36 @@ export default function MenuPage() {
               className="grid grid-cols-1 lg:grid-cols-2 gap-8"
             >
               {isLoading ? (
-                [1,2,3,4].map(i => (
-                  <div key={i} className="h-48 bg-white/5 animate-pulse rounded-sm" />
-                ))
+                <>
+                  {[1, 2, 3, 4].map((i) => (
+                    <div
+                      key={i}
+                      className="bg-charcoal border border-dark-border/40 flex flex-col sm:flex-row h-full overflow-hidden rounded-[2px]"
+                      style={{ minHeight: '230px' }}
+                    >
+                      {/* Image side skeleton */}
+                      <div className="w-full sm:w-[40%] h-48 sm:h-auto bg-primary-black relative overflow-hidden flex-shrink-0">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gold-500/5 to-transparent bg-[length:200%_100%] animate-shimmer" />
+                      </div>
+                      {/* Content side skeleton */}
+                      <div className="w-full sm:w-[60%] p-6 md:p-8 flex flex-col justify-between relative bg-charcoal sm:bg-transparent w-full">
+                        <div className="space-y-4">
+                          <div className="flex justify-between items-start gap-4">
+                            <div className="h-6 w-3/5 bg-gradient-to-r from-white/5 via-gold-500/10 to-white/5 bg-[length:200%_100%] animate-shimmer rounded-sm" />
+                            <div className="h-6 w-1/5 bg-gradient-to-r from-white/5 via-gold-500/10 to-white/5 bg-[length:200%_100%] animate-shimmer rounded-sm" />
+                          </div>
+                          <div className="h-4 w-2/5 bg-gradient-to-r from-white/5 via-white/10 to-white/5 bg-[length:200%_100%] animate-shimmer rounded-sm" />
+                          <div className="h-3 w-1/4 bg-white/5 rounded-sm" />
+                          <div className="space-y-2 pt-2">
+                            <div className="h-3 w-full bg-gradient-to-r from-white/5 via-white/10 to-white/5 bg-[length:200%_100%] animate-shimmer rounded-sm" />
+                            <div className="h-3 w-5/6 bg-gradient-to-r from-white/5 via-white/10 to-white/5 bg-[length:200%_100%] animate-shimmer rounded-sm" />
+                          </div>
+                        </div>
+                        <div className="h-4 w-1/3 bg-gradient-to-r from-white/5 via-gold-500/10 to-white/5 bg-[length:200%_100%] animate-shimmer rounded-sm pt-4 mt-6" />
+                      </div>
+                    </div>
+                  ))}
+                </>
               ) : filteredItems.length === 0 ? (
                 <div className="col-span-full py-20 text-center">
                   <p className="text-cream/30 uppercase tracking-[0.3em]">No items available in this category</p>

@@ -7,64 +7,91 @@ export default function LoadingScreen() {
       id="loading-screen"
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.6, ease: 'easeInOut' }}
+      transition={{ duration: 0.5, ease: 'easeInOut' }}
     >
-      {/* Animated logo */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-center"
-      >
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '22px' }}>
+        {/* Top Bar */}
         <motion.div
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="w-16 h-px mx-auto mb-6"
-          style={{ background: 'linear-gradient(90deg,transparent,#D4A017,transparent)' }}
+          transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            width: 'clamp(360px, 32vw, 500px)',
+            height: '2px',
+            background: 'linear-gradient(90deg, transparent 0%, #C9A84C 15%, #efdba3 50%, #C9A84C 85%, transparent 100%)',
+            transformOrigin: 'center',
+          }}
         />
+
+        {/* Pre-Logo Tagline (Above Logo) */}
+        <motion.p
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5, ease: 'easeOut' }}
+          style={{
+            fontFamily: "'Lato', sans-serif",
+            fontSize: '0.7rem',
+            letterSpacing: '0.4em',
+            textTransform: 'uppercase',
+            color: '#C9A84C',
+            margin: 0,
+            paddingLeft: '0.4em', /* Balance out the letter-spacing on the right */
+          }}
+        >
+          Authentic Pakistani Cuisine
+        </motion.p>
+
+        {/* Brand Name */}
         <motion.h1
           initial={{ opacity: 0, letterSpacing: '0.6em' }}
           animate={{ opacity: 1, letterSpacing: '0.15em' }}
-          transition={{ duration: 1, delay: 0.4 }}
-          className="font-display text-5xl md:text-7xl font-bold gold-text mb-3"
+          transition={{ duration: 1.2, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontSize: 'clamp(2.5rem, 6vw, 5rem)',
+            fontWeight: 700,
+            margin: 0,
+            paddingLeft: '0.15em', /* Balance out the letter-spacing on the right */
+            background: 'linear-gradient(135deg, #C9A84C, #efdba3, #C9A84C)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}
         >
           Chattha's
         </motion.h1>
+
+        {/* Slogan */}
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.6 }}
-          transition={{ duration: 0.8, delay: 0.9 }}
-          className="text-xs tracking-[0.45em] uppercase text-cream/60 font-body"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.1, ease: 'easeOut' }}
+          style={{
+            fontFamily: "'Lato', sans-serif",
+            fontSize: '0.7rem',
+            letterSpacing: '0.35em',
+            textTransform: 'uppercase',
+            color: 'rgba(250, 247, 240, 0.5)',
+            margin: 0,
+            paddingLeft: '0.35em', /* Balance out the letter-spacing on the right */
+          }}
         >
           Making Desi Food Great Again
         </motion.p>
+
+        {/* Bottom Bar */}
         <motion.div
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
-          transition={{ duration: 0.8, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="w-16 h-px mx-auto mt-6"
-          style={{ background: 'linear-gradient(90deg,transparent,#D4A017,transparent)' }}
+          transition={{ duration: 1, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            width: 'clamp(360px, 32vw, 500px)',
+            height: '2px',
+            background: 'linear-gradient(90deg, transparent 0%, #C9A84C 15%, #efdba3 50%, #C9A84C 85%, transparent 100%)',
+            transformOrigin: 'center',
+          }}
         />
-      </motion.div>
-
-      {/* Progress bar */}
-      <motion.div
-        className="absolute bottom-12 left-1/2 -translate-x-1/2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-      >
-        <div className="w-40 h-px bg-dark-border rounded-full overflow-hidden">
-          <motion.div
-            className="h-full"
-            style={{ background: 'linear-gradient(90deg,#D4A017,#f0c85b)' }}
-            initial={{ width: 0 }}
-            animate={{ width: '100%' }}
-            transition={{ duration: 1.8, delay: 0.3, ease: 'easeInOut' }}
-          />
-        </div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }

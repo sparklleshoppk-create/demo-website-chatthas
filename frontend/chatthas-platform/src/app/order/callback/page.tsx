@@ -10,6 +10,7 @@ export default function PaymentCallbackPage() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<'verifying' | 'success' | 'failed'>('verifying');
   const [message, setMessage] = useState('Verifying your payment...');
+  const [orderDetails, setOrderDetails] = useState<any>(null);
   
   const orderId = searchParams.get('orderId');
   const pfResponseCode = searchParams.get('err_code'); // PayFast error code (00 = success)
@@ -36,6 +37,17 @@ export default function PaymentCallbackPage() {
             status: 'confirmed'
           })
           .eq('id', orderId);
+
+        // Fetch order details for display
+        const { data: orderData } = await supabase
+          .from('orders')
+          .select('order_number, total')
+          .eq('id', orderId)
+          .single();
+
+        if (orderData) {
+          setOrderDetails(orderData);
+        }
 
         if (error) {
           console.error('Error updating order:', error);
@@ -69,6 +81,12 @@ export default function PaymentCallbackPage() {
           <>
             <FaCheckCircle className="text-gold-500 mx-auto mb-6" size={64} />
             <h2 className="text-2xl font-display font-bold text-cream mb-4 tracking-tight">Order <span className="gold-text italic">Confirmed</span></h2>
+            {orderDetails && (
+              <div className="mb-6">
+                <p className="text-xl font-display font-bold text-cream mb-1">Order <span className="gold-text italic">#{orderDetails.order_number}</span></p>
+                <p className="text-cream/70 text-sm">Total Paid: <span className="text-gold-500 font-bold">Rs. {orderDetails.total}</span></p>
+              </div>
+            )}
             <p className="text-cream/50 mb-8">{message}</p>
             <button 
               onClick={() => router.push(`/order/track/${orderId}`)} 

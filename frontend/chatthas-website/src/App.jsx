@@ -1,6 +1,6 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { MotionConfig } from 'framer-motion';
+import { MotionConfig, AnimatePresence } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
 
 import Navbar from './components/Navbar';
@@ -46,37 +46,54 @@ function LazyPage({ children }) {
 }
 
 export default function App() {
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+
+  useEffect(() => {
+    // Hold the branded loading screen for a minimum of 2.8 seconds
+    // so users can see the full bar-expand + logo animation
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 2800);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <ErrorBoundary>
-      <MotionConfig reducedMotion="always">
-        <AuthProvider>
-          <CartProvider>
-            <BrowserRouter>
-              <Toaster
-                position="top-right"
-                toastOptions={{
-                  style: { background: '#242424', color: '#F5EDD0', border: '1px solid #D4A017' },
-                }}
-              />
-              <Routes>
-                <Route path="/" element={<PageShell><HomePage /></PageShell>} />
-                <Route path="/about" element={<PageShell><LazyPage><AboutPage /></LazyPage></PageShell>} />
-                <Route path="/our-story" element={<PageShell><LazyPage><StoryPage /></LazyPage></PageShell>} />
-                <Route path="/menu" element={<PageShell><LazyPage><MenuPage /></LazyPage></PageShell>} />
-                <Route path="/branches" element={<PageShell><LazyPage><BranchesPage /></LazyPage></PageShell>} />
-                <Route path="/gallery" element={<PageShell><LazyPage><GalleryPage /></LazyPage></PageShell>} />
-                <Route path="/reviews" element={<PageShell><LazyPage><ReviewsPage /></LazyPage></PageShell>} />
-                <Route path="/order" element={<PageShell><LazyPage><OrderOnlinePage /></LazyPage></PageShell>} />
-                <Route path="/contact" element={<PageShell><LazyPage><ContactPage /></LazyPage></PageShell>} />
-                <Route path="/owner" element={<PageShell><LazyPage><OwnerMessagePage /></LazyPage></PageShell>} />
-                <Route path="/franchise" element={<PageShell><LazyPage><FranchisePage /></LazyPage></PageShell>} />
-                <Route path="/profile" element={<PageShell><LazyPage><ProfilePage /></LazyPage></PageShell>} />
-                <Route path="/checkout" element={<PageShell><LazyPage><CheckoutPage /></LazyPage></PageShell>} />
-                <Route path="/order-success" element={<PageShell><LazyPage><OrderSuccessPage /></LazyPage></PageShell>} />
-              </Routes>
-            </BrowserRouter>
-          </CartProvider>
-        </AuthProvider>
+      <MotionConfig reducedMotion="user">
+        <AnimatePresence mode="wait">
+          {isInitialLoading ? (
+            <LoadingScreen key="initial-loader" />
+          ) : (
+            <AuthProvider key="app-content">
+              <CartProvider>
+                <BrowserRouter>
+                  <Toaster
+                    position="top-right"
+                    toastOptions={{
+                      style: { background: '#242424', color: '#F5EDD0', border: '1px solid #D4A017' },
+                    }}
+                  />
+                  <Routes>
+                    <Route path="/" element={<PageShell><HomePage /></PageShell>} />
+                    <Route path="/about" element={<PageShell><LazyPage><AboutPage /></LazyPage></PageShell>} />
+                    <Route path="/our-story" element={<PageShell><LazyPage><StoryPage /></LazyPage></PageShell>} />
+                    <Route path="/menu" element={<PageShell><LazyPage><MenuPage /></LazyPage></PageShell>} />
+                    <Route path="/branches" element={<PageShell><LazyPage><BranchesPage /></LazyPage></PageShell>} />
+                    <Route path="/gallery" element={<PageShell><LazyPage><GalleryPage /></LazyPage></PageShell>} />
+                    <Route path="/reviews" element={<PageShell><LazyPage><ReviewsPage /></LazyPage></PageShell>} />
+                    <Route path="/order" element={<PageShell><LazyPage><OrderOnlinePage /></LazyPage></PageShell>} />
+                    <Route path="/contact" element={<PageShell><LazyPage><ContactPage /></LazyPage></PageShell>} />
+                    <Route path="/owner" element={<PageShell><LazyPage><OwnerMessagePage /></LazyPage></PageShell>} />
+                    <Route path="/franchise" element={<PageShell><LazyPage><FranchisePage /></LazyPage></PageShell>} />
+                    <Route path="/profile" element={<PageShell><LazyPage><ProfilePage /></LazyPage></PageShell>} />
+                    <Route path="/checkout" element={<PageShell><LazyPage><CheckoutPage /></LazyPage></PageShell>} />
+                    <Route path="/order-success" element={<PageShell><LazyPage><OrderSuccessPage /></LazyPage></PageShell>} />
+                  </Routes>
+                </BrowserRouter>
+              </CartProvider>
+            </AuthProvider>
+          )}
+        </AnimatePresence>
       </MotionConfig>
     </ErrorBoundary>
   );
