@@ -7,6 +7,7 @@ import { FaSearch } from 'react-icons/fa';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getDisplayPrice } from '@/lib/utils';
+import { getMenuItemImage } from '@/data/menuImages';
 
 const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
   const [timeLeft, setTimeLeft] = useState('');
@@ -63,6 +64,9 @@ export default function MenuClient({ items, categories }: { items: any[], catego
     });
   }, [items, activeCategory, searchQuery]);
 
+  // Get the active category's hero image
+  const activeCategoryData = categories.find((c: any) => c.id === activeCategory);
+
   return (
     <main className="bg-charcoal min-h-screen pb-20">
       <PageHero 
@@ -107,67 +111,116 @@ export default function MenuClient({ items, categories }: { items: any[], catego
       <div className="container-custom">
         <motion.div 
           layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
           <AnimatePresence mode="popLayout">
-            {filteredItems.map((dish) => (
-              <motion.div
-                key={dish.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-                style={{ pointerEvents: 'auto' }}
-              >
-                <Link 
-                  href={`/menu/${dish.slug}`}
-                  className="group bg-dark-card border border-dark-border rounded-sm overflow-hidden flex flex-col hover:border-gold-500/30 transition-all h-full block"
-                  onClick={(e) => e.stopPropagation()}
+            {filteredItems.map((dish) => {
+              const imageUrl = getMenuItemImage(dish);
+              
+              return (
+                <motion.div
+                  key={dish.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
+                  style={{ pointerEvents: 'auto' }}
                 >
-                  <div className="h-48 overflow-hidden bg-charcoal relative pointer-events-none">
-                    {dish.image_url ? (
+                  <Link 
+                    href={`/menu/${dish.slug}`}
+                    className="group bg-dark-card border border-dark-border rounded-sm overflow-hidden flex flex-col hover:border-gold-500/30 transition-all h-full block card-lift"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {/* Image Section */}
+                    <div className="h-56 overflow-hidden relative pointer-events-none">
                       <Image 
-                        src={dish.image_url} 
+                        src={imageUrl} 
                         alt={dish.name}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 20vw"
+                        className="object-cover group-hover:scale-110 transition-transform duration-700 brightness-90 group-hover:brightness-100"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
                       />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#2a1e08] to-[#1a1206]">
-                        <span className="text-4xl opacity-10">🍽️</span>
+                      {/* Warm film overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                      {/* Tags */}
+                      <div className="absolute top-3 left-3 flex gap-2 z-10">
+                        {dish.badge && (
+                          <span className="text-[10px] font-bold uppercase tracking-wider bg-gold-500 text-charcoal px-2 py-0.5 rounded-sm">
+                            {dish.badge}
+                          </span>
+                        )}
+                        {dish.is_featured && (
+                          <span className="text-[10px] font-bold uppercase tracking-wider border border-gold-500 text-gold-500 px-2 py-0.5 rounded-sm bg-charcoal/60 backdrop-blur-sm">
+                            Signature
+                          </span>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  <div className="p-5 flex-grow pointer-events-none">
-                    <h3 className="font-display text-lg font-bold text-cream group-hover:text-gold-400 transition-colors">{dish.name}</h3>
-                    {(() => {
-                      const isClient = typeof window !== 'undefined';
-                      const hasActiveDiscount = isClient && dish.discount_price && dish.discount_end_date && new Date(dish.discount_end_date) > new Date();
-                      
-                      return (
-                        <div className="mt-1">
-                          {hasActiveDiscount ? (
-                            <div className="flex items-baseline gap-2">
-                              <span className="text-gold-500 font-bold text-lg">Rs. {dish.discount_price}</span>
-                              <span className="text-cream/40 line-through text-sm">{getDisplayPrice(dish)}</span>
-                            </div>
-                          ) : (
-                            <p className="text-gold-500 font-bold text-lg">
-                              {getDisplayPrice(dish)}
-                            </p>
-                          )}
-                          {hasActiveDiscount && <CountdownTimer targetDate={dish.discount_end_date} />}
+                      {/* Spice level indicator */}
+                      {dish.spice_level > 0 && (
+                        <div className="absolute bottom-3 right-3 flex gap-0.5 z-10">
+                          {[1,2,3].map(i => (
+                            <div key={i} className={`w-1.5 h-1.5 rounded-full ${i <= dish.spice_level ? 'bg-ember-500' : 'bg-cream/20'}`} />
+                          ))}
                         </div>
-                      );
-                    })()}
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
+                      )}
+                    </div>
+
+                    {/* Content Section */}
+                    <div className="p-5 flex-grow pointer-events-none flex flex-col">
+                      <h3 className="font-display text-xl font-bold text-cream group-hover:text-gold-400 transition-colors leading-tight">
+                        {dish.name}
+                      </h3>
+                      {dish.name_urdu && (
+                        <p className="text-cream/30 text-sm mt-0.5 font-urdu">{dish.name_urdu}</p>
+                      )}
+                      {dish.description && (
+                        <p className="text-cream/40 text-xs mt-2 line-clamp-2 font-body leading-relaxed">
+                          {dish.description}
+                        </p>
+                      )}
+                      <div className="mt-auto pt-4">
+                        {(() => {
+                          const isClient = typeof window !== 'undefined';
+                          const hasActiveDiscount = isClient && dish.discount_price && dish.discount_end_date && new Date(dish.discount_end_date) > new Date();
+                          
+                          return (
+                            <div>
+                              {hasActiveDiscount ? (
+                                <div className="flex items-baseline gap-2">
+                                  <span className="text-gold-500 font-bold text-lg">Rs. {dish.discount_price}</span>
+                                  <span className="text-cream/40 line-through text-sm">{getDisplayPrice(dish)}</span>
+                                </div>
+                              ) : (
+                                <p className="text-gold-500 font-bold text-lg">
+                                  {getDisplayPrice(dish)}
+                                </p>
+                              )}
+                              {hasActiveDiscount && <CountdownTimer targetDate={dish.discount_end_date} />}
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         </motion.div>
+
+        {/* Empty state */}
+        {filteredItems.length === 0 && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }}
+            className="text-center py-20"
+          >
+            <p className="text-4xl mb-4 opacity-20">🍽️</p>
+            <p className="text-cream/40 font-body text-lg">No dishes found</p>
+            <p className="text-cream/20 font-body text-sm mt-1">Try a different search or category</p>
+          </motion.div>
+        )}
       </div>
     </main>
   );

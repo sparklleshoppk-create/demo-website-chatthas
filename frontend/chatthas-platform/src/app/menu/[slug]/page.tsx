@@ -4,6 +4,7 @@ import { PageHero, SpiceLevel, Tag } from '@/components/UI';
 import Link from 'next/link';
 import { FaChevronLeft, FaShoppingBag } from 'react-icons/fa';
 import AddToCartButton from './AddToCartButton';
+import { getMenuItemImage } from '@/data/menuImages';
 
 import { Metadata } from 'next';
 
@@ -33,13 +34,15 @@ export default async function MenuItemPage({ params }: { params: { slug: string 
 
   if (!item) notFound();
 
+  const itemImage = getMenuItemImage(item);
+
   return (
     <main className="bg-charcoal min-h-screen pb-20">
       <PageHero 
         title={item.name}
         subtitle={item.categories?.name}
         breadcrumb={`Menu / ${item.name}`}
-        image={item.image_url || '/menu_banner.png'}
+        image={itemImage}
       />
 
       <div className="container-custom py-20">
@@ -52,11 +55,7 @@ export default async function MenuItemPage({ params }: { params: { slug: string 
           <div className="relative group">
             <div className="absolute -inset-4 bg-gold-500/5 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="bg-dark-card border border-dark-border rounded-sm overflow-hidden aspect-square flex items-center justify-center relative z-10 shadow-2xl">
-              {item.image_url ? (
-                <img src={item.image_url} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-              ) : (
-                <div className="text-cream/10 text-9xl">🍽️</div>
-              )}
+              <img src={itemImage} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
 
